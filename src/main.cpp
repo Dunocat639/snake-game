@@ -13,7 +13,7 @@ int cellCount = 25;
 
 double lastUpdateTime = 0;
 
-// Function
+// Function to update in time
 bool eventTriggered(double interval) {
     double currentTime = GetTime();
     if (currentTime - lastUpdateTime >= interval) {
@@ -24,6 +24,7 @@ bool eventTriggered(double interval) {
     }
 }
 
+// Function to determine collision between snake and food
 bool ElementInDeque(Vector2 element, std::deque<Vector2> deque) {
     for (unsigned int i = 0; i < deque.size(); i++) {
         if (Vector2Equals(deque[i], element)) {
@@ -33,6 +34,7 @@ bool ElementInDeque(Vector2 element, std::deque<Vector2> deque) {
     return false;
 }
 
+// Snake class
 class Snake {
 public:
     std::deque<Vector2> body = {Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9}};
@@ -42,7 +44,7 @@ public:
         for (unsigned i = 0; i < body.size(); i++) {
             float x = body[i].x;
             float y = body[i].y;
-            Rectangle segment = Rectangle{x * cellCount, y * cellSize, (float)cellSize, (float)cellSize};
+            Rectangle segment = Rectangle{x * cellSize, y * cellSize, (float)cellSize, (float)cellSize};
             DrawRectangleRounded(segment, 0.5, 6, darkGreen);
         }
     }
@@ -54,6 +56,7 @@ public:
 
 };
 
+// Food class
 class Food {
 public:
     Vector2 position = {5, 6};
@@ -91,6 +94,7 @@ public:
 
 };
 
+// Game class
 class Game {
 public:
     Snake snake = Snake();
@@ -107,7 +111,7 @@ public:
     }
 
     void CheckCollisionWithFood() {
-        if (Vector2Equals(snake.body[0] ,food.position)) {
+        if (Vector2Equals(snake.body[0], food.position)) {
             food.position = food.GenerateRandomPos(snake.body);
         }
     }
@@ -123,23 +127,26 @@ int main() {
 
     while(!WindowShouldClose()) {
 
-        BeginDrawing();
-
-            if(eventTriggered(0.2)) {
-                game.Update();
-            }
-
-            if(IsKeyPressed(KEY_UP) && game.snake.direction.y != 1){
+            // Snake controls
+            // TODO: create a function for this
+            if(IsKeyPressed(KEY_UP) && game.snake.direction.y != 1) {
                 game.snake.direction = {0, -1};
             }
-            if(IsKeyPressed(KEY_DOWN) && game.snake.direction.y != -1){
+            if(IsKeyPressed(KEY_DOWN) && game.snake.direction.y != -1) {
                 game.snake.direction = {0, 1};
             }
-            if(IsKeyPressed(KEY_LEFT) && game.snake.direction.x != 1){
+            if(IsKeyPressed(KEY_LEFT) && game.snake.direction.x != 1) {
                 game.snake.direction = {-1, 0};
             }
-            if(IsKeyPressed(KEY_RIGHT) && game.snake.direction.x != -1){
+            if(IsKeyPressed(KEY_RIGHT) && game.snake.direction.x != -1) {
                 game.snake.direction = {1, 0};
+            }
+
+        BeginDrawing();
+
+            // Update only in intervals of 200ms
+            if(eventTriggered(0.2)) {
+                game.Update();
             }
 
             ClearBackground(green);
