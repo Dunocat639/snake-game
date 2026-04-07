@@ -40,6 +40,7 @@ class Snake {
 public:
     std::deque<Vector2> body = {Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9}}; // Create snake body
     Vector2 direction = {1, 0}; // Define direction
+    Vector2 lastProcessedDirection = {1, 0};
     bool addSegment = false;
 
     // Draw snake body
@@ -53,6 +54,8 @@ public:
     }
 
     void Update() {
+
+        lastProcessedDirection = direction;
 
         body.push_front(Vector2Add(body[0], direction)); // Move snake body
 
@@ -206,19 +209,19 @@ int main() {
 
             // Snake controls
             // TODO: create a function for this
-            if(IsKeyPressed(KEY_UP) && game.snake.direction.y != 1) {
+            if(IsKeyPressed(KEY_UP) && game.snake.lastProcessedDirection.y != 1) {
                 game.snake.direction = {0, -1};
                 game.running = true;
             }
-            if(IsKeyPressed(KEY_DOWN) && game.snake.direction.y != -1) {
+            if(IsKeyPressed(KEY_DOWN) && game.snake.lastProcessedDirection.y != -1) {
                 game.snake.direction = {0, 1};
                 game.running = true;
             }
-            if(IsKeyPressed(KEY_LEFT) && game.snake.direction.x != 1) {
+            if(IsKeyPressed(KEY_LEFT) && game.snake.lastProcessedDirection.x != 1) {
                 game.snake.direction = {-1, 0};
                 game.running = true;
             }
-            if(IsKeyPressed(KEY_RIGHT) && game.snake.direction.x != -1) {
+            if(IsKeyPressed(KEY_RIGHT) && game.snake.lastProcessedDirection.x != -1) {
                 game.snake.direction = {1, 0};
                 game.running = true;
             }
